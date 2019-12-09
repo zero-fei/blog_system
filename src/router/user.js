@@ -1,3 +1,4 @@
+const { set } = require('../db/redis')
 const { login } = require('../controller/user.js')
 const { SuccessModel, ErrorModel } = require('../model/resModel')
 
@@ -13,15 +14,14 @@ const handleUesrRouter = (req, res) => {
         // 设置session
         req.session.username = data.username;
         req.session.realname = data.realname;
+        // 同步到redis
+        set(req.sessionId, req.session)
         return new SuccessModel()
       } else {
         return new ErrorModel('登录失败')
       }
     })
   }
-
-  //登录验证测试
-
 }
 
 module.exports = handleUesrRouter
