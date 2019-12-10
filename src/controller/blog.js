@@ -1,4 +1,5 @@
 const { exec } = require('../db/mysql')
+const xss = require('xss')
 
 const getList = (author, keyword) => {
   // 先返回假数据（格式是正确的）
@@ -25,7 +26,7 @@ const newBlog = (blogData = {}) => {
   const createtime = Date.now()
   const sql = `
     insert into blogs (title, content, createtime, author)
-    values ('${title}','${content}','${createtime}','${author}');
+    values ('${xss(title)}','${content}','${createtime}','${author}');
   `
   return exec(sql).then(data => {
     return { id: data.insertId }

@@ -19,7 +19,8 @@
   },
   "homepage": "https://github.com/longfeixueyi/blog_system#readme",
   "dependencies": {
-    "http": "^0.0.0"
+    "http": "^0.0.0",
+    "xss": "^1.0.6"
   },
   "devDependencies": {
     "cross-env": "^6.0.3",
