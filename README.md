@@ -14,5 +14,9 @@ mysql,redis（存储session + 日志）
 
 ## 登录验证
 cookie + session
-##发布部署
+
+## 加密啊
+md5 hash加密
+
+## 发布部署
 PM2
