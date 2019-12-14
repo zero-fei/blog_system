@@ -1,7 +1,7 @@
 const { exec } = require('../db/mysql')
 const xss = require('xss')
 
-const getList = (author, keyword) => {
+const getList = async (author, keyword) => {
   // 先返回假数据（格式是正确的）
   let sql = `select * from blogs where 1=1 `
   if (author) {
@@ -12,45 +12,41 @@ const getList = (author, keyword) => {
   }
   sql += `order by createtime desc;`
   // 返回promise
-  return exec(sql)
+  return await exec(sql)
 }
 
-const getDetail = id => {
+const getDetail = async (id) => {
   const sql = `select * from blogs where id='${id}'`
-  return exec(sql).then(data => data[0])
+  const val = await exec(sql)
+  return val[0]
 }
 
-const newBlog = (blogData = {}) => {
-  // blogData 是一个博客对象，包含title,content, author属性
+const newBlog = async (blogData = {}) => {
   const { title, content, author } = blogData
   const createtime = Date.now()
   const sql = `
     insert into blogs (title, content, createtime, author)
     values ('${xss(title)}','${content}','${createtime}','${author}');
   `
-  return exec(sql).then(data => {
-    return { id: data.insertId }
-  })
+  const val = await exec(sql)
+  return { id: val.insertId }
 }
 
-const updateBlog = (id, blogData = {}) => {
+const updateBlog = async (id, blogData = {}) => {
   // blogData 是一个博客对象，包含title,content属性
   const { title, content } = blogData
   const sql = `
     update blogs set title='${title}', content='${content}' where id=${id} 
   `
-  return exec(sql).then(data => {
-    return data.affectedRows > 0
-  })
-  // return true
+  const val = await exec(sql)
+  return val.affectedRows > 0
 }
 
-const delBlog = (id, author) => {
+const delBlog = async (id, author) => {
   // id 就是删除的id
   const sql = `delete from blogs where id=${id} and author='${author}';`
-  return exec(sql).then(data => {
-    return data.affectedRows > 0
-  })
+  const val = await exec(sql)
+  return val.affectedRows > 0
 }
 
 module.exports = {
